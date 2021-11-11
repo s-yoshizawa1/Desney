@@ -31,12 +31,8 @@ const setupExpressServer = () => {
   //　追加する
   app.post("/v1/api/desney/attraction/list", (req, res) => {
 
-    const attractionInfo = req.body;
-    console.log(attractionInfo);
-    let attractionName = req.body[0].attraction_name;
-    let congestionLevel = req.body[0].congestion_level;
     knex("attraction_info")
-      .insert({ attraction_name: attractionName, congestion_level: congestionLevel})
+      .insert(req.body)
       .then(() => {
       res.status(200).end();
     });
@@ -48,9 +44,7 @@ const setupExpressServer = () => {
     const attractionName =  req.body[0].attraction_name;
     knex("attraction_info")
       .where({ id: attractionId })
-      .update({
-        attraction_name: attractionName
-      })
+      .update(req.body)
       .then(() => {
       res.status(200).end();
     });
