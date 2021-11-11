@@ -6,7 +6,6 @@ exports.up = function(knex, Promise) {
  
       t.string("attraction_name", 100)
         .notNullable()
-        .unique();
 
     // t.string("attraction_name_kana", 100)
 
