@@ -30,6 +30,6 @@
 レコード更新日　：rec_koushin_date
 
 # 各種APIリスト
-- `GET /v1/api/desney`
+- `GET /v1/api/desney/attraction/list`
   - Desneyのアトラクションリストを返します。
-  - `/v1/api/desney?limit = n` で`n` 個のアトラクションのみを返す事が出来ます。
+  - `/v1/api/desney/attraction/list?limit = n` で`n` 個のアトラクションのみを返す事が出来ます。
