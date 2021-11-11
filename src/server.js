@@ -2,13 +2,19 @@ const express = require("express");
 const app = express();
 const config = require("../config");
 const knex = require("knex")(config.db);
+app.set("view engine", "ejs");
 
 
 const setupExpressServer = () => {
   app.use(express.json());
 
   //  /v1/api/desney/attraction/list endpoint
-  //　一覧を取得する
+  
+  app.get( '/', ( req, res ) => {
+    res.render( 'test.ejs', { title: 'Desney' } );  
+  });
+
+// 　一覧を取得する
   app.get("/v1/api/desney/attraction/list/", (req, res) => {
     const {limit} = req.params;
   
@@ -16,15 +22,16 @@ const setupExpressServer = () => {
       knex("attraction_info")
       .select()
       .then(function (results) {
-      res.send(results);
-      
+      // res.send(results);
+      res.sendFile('/public/test.html');
       });
     res.send(attractionList);
     }else{
       knex("attraction_info")
       .select()
-      .then(() => {
-      res.send(results);
+      .then((results) => {
+      // res.send(results);
+      res.sendFile(__dirname + '/public/test.html');
       });
     }
   });
@@ -59,7 +66,18 @@ const setupExpressServer = () => {
       .then(() => {
       res.status(200).end();
     });  
-    });
+  });
+
+  //  /v1/api/desney/attraction/waitedtime endpoint
+  //　一覧を取得する
+  app.get("/v1/api/desney/attraction/waitedtime/", (req, res) => {
+  
+      knex("attraction_info")
+      .select("id","attraction_name","congestion_level")
+      .then((results) => {
+      res.send(results);
+      });
+  });
 
   return app;
 };
