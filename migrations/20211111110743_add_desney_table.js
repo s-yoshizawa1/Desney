@@ -24,7 +24,7 @@ exports.up = function(knex, Promise) {
     t.integer("average_waiting_time_during_busy_season")
 
     t.integer("average_waiting_time_during_low_season")
-
+    
     t.string("congestion_level", 100)
 
     t.integer("ride_time")
@@ -39,9 +39,9 @@ exports.up = function(knex, Promise) {
 
     t.string("recommended_person", 100)
 
-    t.timestamp("rec_create_date")
+    // t.timestamp("rec_create_date")
 
-    t.timestamp("rec_updated_date")
+    // t.timestamp("rec_updated_date")
     });
   };
  

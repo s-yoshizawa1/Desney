@@ -6,14 +6,14 @@ app.set("view engine", "ejs");
 
 
 const setupExpressServer = () => {
-  // app.use( express.static( "public" ) );
+  app.use( express.static( "public" ) );
   app.use(express.json());
 
   //  /v1/api/desney/attraction/list endpoint
-  // app.get( '/', ( req, res ) => {
-  //   res.render( 'test.ejs', { title: 'Desney' } );  
+  app.get( '/', ( req, res ) => {
+    res.render( 'test.ejs', { title: 'Desney' } );  
     // res.sendFile(__dirname + '/index.html');
-  // });
+  });
 
 // 　一覧を取得する
   app.get("/v1/api/desney/attraction/list/", (req, res) => {
