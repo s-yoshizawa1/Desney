@@ -74,20 +74,36 @@ const setupExpressServer = () => {
   });
 
   // 　１分あたりの待ち時間増加数を取得する
-  app.get("/v1/api/desney/attraction/waitedtime/", (req, res) => {
-    knex("attraction_info")
-      .select("id","attraction_name","theme","average_waiting_time_during_busy_season","average_waiting_time_during_low_season").limit(1)
-      .then((results) => {
-    console.log(results);
-    let newTime = results[0].average_waiting_time_during_busy_season
-    let lowTime = results[0].average_waiting_time_during_low_season
-    let timeByMinutes = (newTime - lowTime ) / 10;
-    results[0].timeByMinutes = timeByMinutes;
-    res.send(results);  
-    
-
-    // res.render( 'test.ejs',  req.body[0] );  
-    });
+//   app.get("/v1/api/desney/attraction/waitedtime/", (req, res) => {
+//     knex("attraction_info")
+//       .select("id","attraction_name","theme","average_waiting_time_during_busy_season","average_waiting_time_during_low_season").limit(1)
+//       .then((results) => {
+//     console.log(results);
+//     let newTime = results[0].average_waiting_time_during_busy_season
+//     let lowTime = results[0].average_waiting_time_during_low_season
+//     let timeByMinutes = (newTime - lowTime ) / 10;
+//     results[0].timeByMinutes = timeByMinutes;
+//     res.send(results);  
+//     // res.render( 'test.ejs',  req.body[0] );  
+//     });
+// });
+app.get("/v1/api/desney/attraction/waitedtime/", (req, res) => {
+  knex("attraction_info")
+    .select("id","attraction_name","theme","average_waiting_time_during_busy_season","average_waiting_time_during_low_season").limit(1)
+    .then((results) => {
+  console.log(results);
+  let timeByMinutes;
+  let newTime = results[0].average_waiting_time_during_busy_season
+  let lowTime = results[0].average_waiting_time_during_low_season
+  if(newTime > lowTime){
+    timeByMinutes = (newTime - lowTime ) / 10;
+  }else{
+    timeByMinutes = (lowTime - newTime ) / 10;
+  }
+  results[0].timeByMinutes = timeByMinutes;
+  res.send(results);  
+  // res.render( 'test.ejs',  req.body[0] );  
+  });
 });
 
   return app;
