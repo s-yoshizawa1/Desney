@@ -16,31 +16,28 @@ const setupExpressServer = () => {
   });
 
 // 　一覧を取得する
-  app.get("/v1/api/desney/attraction/list/", (req, res) => {
-    const {limit} = req.params;
+  app.get("/api/v1/desney/attraction/list/:id?", (req, res) => {
+    const {id} = req.params;
   
-    if(!isNaN(limit)){
+    if (id == undefined) {
       knex("attraction_info")
       .select()
       .orderBy('theme','average_waiting_time_during_busy_season')
       .then(function (results) {
       res.send(results);
-      // res.sendFile('/public/test.html');
       });
-    res.send(attractionList);
     }else{
       knex("attraction_info")
+      .where({ id: id })
       .select()
       .orderBy('theme','average_waiting_time_during_busy_season')
       .then((results) => {
       res.send(results);
-      // res.sendFile('./test');
       });
     }
   });
   //　追加する
-  app.post("/v1/api/desney/attraction/list", (req, res) => {
-
+  app.post("/api/v1/desney/attraction/list", (req, res) => {
     knex("attraction_info")
       .insert(req.body)
       .then(() => {
@@ -49,9 +46,8 @@ const setupExpressServer = () => {
   });
 
   //　更新する
-  app.patch("/v1/api/desney/attraction/list/", (req, res) => {
+  app.patch("/api/v1/desney/attraction/list/", (req, res) => {
     const attractionId =  req.body[0].id;
-    console.log(attractionId);
     const attractionName =  req.body[0].attraction_name;
     knex("attraction_info")
       .where({ id: attractionId })
@@ -62,9 +58,9 @@ const setupExpressServer = () => {
   });
 
   //　削除する
-  app.delete("/v1/api/desney/attraction/list/", (req, res) => {
+  app.delete("/api/v1/desney/attraction/list/", (req, res) => {
     const attractionId =  req.body[0].id;
-    console.log(attractionId);
+    // console.log(req.body[0].id);
     knex("attraction_info")
       .where({ id: attractionId })
       .del()
@@ -89,16 +85,16 @@ const setupExpressServer = () => {
 // });
 app.get("/v1/api/desney/attraction/waitedtime/", (req, res) => {
   knex("attraction_info")
-    .select("id","attraction_name","theme","average_waiting_time_during_busy_season","average_waiting_time_during_low_season").limit(1)
+    .select("id","attraction_name","theme","old_waiting_time","new_waiting_time").limit(1)
     .then((results) => {
   console.log(results);
   let timeByMinutes;
-  let newTime = results[0].average_waiting_time_during_busy_season
-  let lowTime = results[0].average_waiting_time_during_low_season
+  let newTime = results[0].new_waiting_time;
+  let oldTime = results[0].old_waiting_time;
   if(newTime > lowTime){
-    timeByMinutes = (newTime - lowTime ) / 10;
+    timeByMinutes = (newTime - oldTime ) / 10;
   }else{
-    timeByMinutes = (lowTime - newTime ) / 10;
+    timeByMinutes = (oldTime - newTime ) / 10;
   }
   results[0].timeByMinutes = timeByMinutes;
   res.send(results);  
